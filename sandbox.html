@@ -1,0 +1,172 @@
+<!-- John Robinson 2011,2020 -->
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>TeslaGL Sand Toy</title>
+<style>
+body {
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-o-user-select: none;
+user-select: none;
+touch-action: none;
+overflow: hidden;
+-webkit-user-select:none;
+-webkit-touch-callout:none;
+}
+</style>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="bundle.js"></script>
+<script src="sandtoy.js"></script>
+
+<script type='text/javascript'>
+
+var gl // GL context
+
+var mousePos = [0, 0]
+var mouseDelta = [0, 0]
+var reset
+var reassemble
+var mouseDown = 0
+var autoReassemble = 1
+
+var error = ""
+
+function start() {
+	start2();
+	if (error != "") {$("#havefun").hide();$("#nofun").show();$("#nofun").html(error);}
+}
+
+$(document).ready(function() {
+	var myObject = document.getElementById("glcanvas");
+
+	function ElementPosition(obj) {
+		var x=0, y=0
+		x = obj.offsetLeft
+		y = obj.offsetTop
+		var body = document.getElementsByTagName('body')[0]
+		while (obj.offsetParent && obj!=body) {
+			x += obj.offsetParent.offsetLeft
+			y += obj.offsetParent.offsetTop
+			obj = obj.offsetParent
+		}
+		return [x,y]
+	}
+
+	$(document).bind('mousedown touchstart',
+		function(e) {
+			var posx = 0;
+			var posy = 0;
+			mouseDown = 1
+			mouseDelta = [0,0]
+			var pageX;
+			var pageY;
+			if (e.type == "touchstart") {
+				pageX = window.event.targetTouches[0].pageX;
+				pageY = window.event.targetTouches[0].pageY;
+			} 
+			else {
+				pageX = e.pageX;
+				pageY = e.pageY;
+			}
+
+			if (pageX || pageY) {
+				posx = pageX;
+				posy = pageY;
+			}
+
+			var offset = ElementPosition(myObject);
+			
+			mouseDelta = [0,0]
+			mousePos = [((posx-offset[0])), (posy-offset[1])]
+	});
+	
+	$(document).bind('mouseup touchend',
+		function(e) {
+			mouseDown = 0
+	});
+	
+	$(document).bind('mousemove touchmove',
+			function(e) {
+				var posx = 0;
+				var posy = 0;
+				if (!e) {
+						e = window.event;
+				}
+				var pageX;
+				var pageY;
+				if (e.type == "touchmove") {
+					pageX = window.event.targetTouches[0].pageX;
+					pageY = window.event.targetTouches[0].pageY;
+				} 
+				else {
+					pageX = e.pageX;
+					pageY = e.pageY;
+				}
+
+				if (pageX || pageY) {
+					posx = pageX;
+					posy = pageY;
+				}
+
+				var offset = ElementPosition(myObject);
+	
+				var newMousePos = [((posx-offset[0])), (posy-offset[1])]
+				mouseDelta = [newMousePos[0]-mousePos[0], newMousePos[1]-mousePos[1]]			
+				mousePos = newMousePos
+		
+	}); // mousemove
+
+
+}); // ready
+
+</script>
+</head>
+
+<body onload='start();'>
+
+<table>
+<tr><td>
+<div id="havefun">
+    <canvas id='glcanvas' width=512 height=512 style="border:1px solid black;cursor:pointer" oncontextmenu="return false;";>
+       It seems the browser does not support the 'canvas' tag (part of HTML5)
+    </canvas>
+    <div id="mouse"></div>
+    <a href="#" onclick="reset();return false;">Reset</a>&nbsp;|&nbsp;<a href="#" onclick="reassemble();return false;">Reassemble</a>&nbsp;|&nbsp;<input type="checkbox" checked="yes" onchange="autoReassemble = this.checked?1:0">Auto Reassemble&nbsp;|&nbsp;<span id="fps">0 fps</span>
+</div>
+<div id="nofun" style="color:red"></div>
+</td><td>&nbsp;</td><td valign="top">
+<p><h3>TeslaGL SandToy</h3></p>
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style">
+<a class="addthis_button_tweet" tw:via="johnrobinsn"></a>
+<a class="addthis_counter addthis_pill_style"></a>
+</div>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=undefined"></script>
+<!-- AddThis Button END -->
+<br/>
+<p>A little pixel toy.  Requires a browser supporting WebGL and the ability to do texture lookups from within a vertex shader.
+The particle physics are calculated on the GPU using a shader.
+</p>
+<p>Just drag your finger around the picture to brush the pixels around... Like sand...<p>
+<!--p><i>Note: On OSX works with latest Firefox and Chrome.</i></p-->
+<!--p><i>Note: On Windows works with latest Firefox if your platform supports WebGL. (Not on Chrome due to lack of support for texture lookups in vertex shaders).</i></p-->
+<p>Here is a <a href="http://www.youtube.com/watch?v=PK9IIXNEMlg">short youtube video</a> of this running on my 2019 Model S along with some instruction to try this out on your own Tesla.</p>
+<p><a href="https://twitter.com/johnrobinsn">johnrobinsn</a> on Twitter.</p>
+</p>
+</td>
+</tr>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-1102626-10");
+pageTracker._trackPageview();
+</script>
+  </body>
+</html>
+
